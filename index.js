@@ -50,13 +50,9 @@ async function run() {
     });
 
     app.post("/jobs/appliedJobs", async (req, res) => {
-      const { user, jobs, resumeLink } = req.body;
+      const appliedJobs = req.body;
 
-      const result = await applyJobsCollection.insertOne({
-        user: user,
-        jobs: jobs,
-        resumeLink: resumeLink,
-      });
+      const result = await applyJobsCollection.insertOne(appliedJobs);
 
       res.send(result);
     });
