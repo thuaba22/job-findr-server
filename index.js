@@ -48,14 +48,25 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
-
-    app.post("/jobs/appliedJobs", async (req, res) => {
-      const appliedJobs = req.body;
-
-      const result = await applyJobsCollection.insertOne(appliedJobs);
-
+    app.post("/jobs", async (req, res) => {
+      const newJobs = req.body;
+      const result = await jobCollection.insertOne(newJobs);
       res.send(result);
     });
+    app.post("/jobs/appliedJobs", async (req, res) => {
+      const appliedJob = req.body;
+
+      const result = await applyJobsCollection.insertOne(appliedJob);
+
+      // Update the applicant count for the specific job being applied to
+      // const updatedApplicant = await jobCollection.updateOne(
+      //   { _id: jobId }, // Assuming you have a jobId field in appliedJob
+      //   { $inc: { applicants: 1 } }
+      // );
+      // console.log(updatedApplicant);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
     console.log(
