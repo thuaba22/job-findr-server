@@ -70,7 +70,7 @@ async function run() {
       const appliedJob = req.body;
       // console.log(appliedJob);
       const jobId = appliedJob.jobId;
-      console.log(jobId);
+      // console.log(jobId);
 
       const result = await applyJobsCollection.insertOne(appliedJob);
 
@@ -89,7 +89,7 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await jobCollection.deleteOne(query);
-      console.log(result);
+      // console.log(result);
       res.send(result);
     });
 
