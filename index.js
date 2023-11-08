@@ -42,12 +42,24 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/jobs/byUser/:userName", async (req, res) => {
+      const userName = req.params.userName;
+      const query = {
+        name: userName,
+      };
+
+      const cursor = jobCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
     app.get("/jobs/appliedJobs/:userEmail", async (req, res) => {
       const userEmail = req.params.userEmail;
       const cursor = applyJobsCollection.find({ user: userEmail });
       const result = await cursor.toArray();
       res.send(result);
     });
+
     app.post("/jobs", async (req, res) => {
       const newJobs = req.body;
       const result = await jobCollection.insertOne(newJobs);
@@ -67,6 +79,35 @@ async function run() {
       res.send(result);
     });
 
+    app.put("/jobs/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+
+        const updatedJobs = req.body;
+        console.log(updatedJobs);
+        delete updatedJobs["_id"];
+
+        const result = await jobCollection.updateOne(
+          query,
+          {
+            $set: { ...updatedJobs },
+          },
+          { upsert: true }
+        );
+        console.log(result);
+        if (result.modifiedCount === 1) {
+          // Product updated successfully
+          res.status(200).json({ message: "Product updated successfully" });
+        } else {
+          // No product was updated (ID not found)
+          res.status(404).json({ message: "Product not found" });
+        }
+      } catch (error) {
+        console.error("Error updating product:", error);
+        res.status(500).json({ message: "Internal server error" });
+      }
+    });
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
     console.log(
