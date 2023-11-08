@@ -68,7 +68,7 @@ async function run() {
 
     app.post("/jobs/appliedJobs", async (req, res) => {
       const appliedJob = req.body;
-      console.log(appliedJob);
+      // console.log(appliedJob);
       const jobId = appliedJob.jobId;
       console.log(jobId);
 
