@@ -99,7 +99,7 @@ async function run() {
         const query = { _id: new ObjectId(id) };
 
         const updatedJobs = req.body;
-        console.log(updatedJobs);
+        // console.log(updatedJobs);
         delete updatedJobs["_id"];
 
         const result = await jobCollection.updateOne(
