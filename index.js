@@ -65,17 +65,30 @@ async function run() {
       const result = await jobCollection.insertOne(newJobs);
       res.send(result);
     });
+
     app.post("/jobs/appliedJobs", async (req, res) => {
       const appliedJob = req.body;
+      console.log(appliedJob);
+      const jobId = appliedJob.jobId;
+      console.log(jobId);
 
       const result = await applyJobsCollection.insertOne(appliedJob);
 
       // Update the applicant count for the specific job being applied to
-      // const updatedApplicant = await jobCollection.updateOne(
-      //   { _id: jobId }, // Assuming you have a jobId field in appliedJob
-      //   { $inc: { applicants: 1 } }
-      // );
+      console.log(result.insertedId);
+      if (result.insertedCount > 0) {
+        await jobCollection.updateOne(
+          { _id: jobId }, // Assuming you have a jobId field in appliedJob
+          { $inc: { applicants: 1 } }
+        );
+      }
       // console.log(updatedApplicant);
+      res.send(result);
+    });
+    app.delete("/jobs/byUser/:userName/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await jobCollection.deleteOne(query);
       res.send(result);
     });
 
